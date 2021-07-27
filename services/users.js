@@ -15,7 +15,7 @@ const createUser = async ({user}) => {
 
 
   if (queriedUser) {
-    throw boom.badRequest('busy account');
+    throw new Error('busy account');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
