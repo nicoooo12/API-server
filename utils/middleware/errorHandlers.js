@@ -26,6 +26,7 @@ const errorHandler = (err, req, res) => {
   const {
     output: {statusCode, payload},
   } = err;
+  console.log('send Error')
   res.json(withErrorStack(payload, err.stack)).status(statusCode);
 };
 
