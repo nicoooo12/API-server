@@ -3,7 +3,7 @@ const store = require('../libs/mongoose');
 // crud
 
 const table = 'cartones';
-const createCarton = async (propietario, serie, icon = 'X' ) => {
+const createCarton = async (propietario, serie) => {
   try {
     let bucle = true;
     let resultado;
@@ -11,7 +11,7 @@ const createCarton = async (propietario, serie, icon = 'X' ) => {
     // console.log(catalogo[0].titulo);
     // catalogo[0].icon ? icon = catalogo.icon[0] : false
     while (bucle) {
-      const dataGenerada = generar(icon);
+      const dataGenerada = generar(catalogo[0].icon);
       const carton = await store.get(table, {data: dataGenerada, serie});
       if (!carton[0]) {
         bucle=false;

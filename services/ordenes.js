@@ -1,8 +1,12 @@
 const store = require('../libs/mongoose');
-const correoService = require('./correo');
+const axios = require('axios');
+const catalogoService = require('./catalogos');
 const cartonesService = require('./cartones');
 const eventoService = require('./evento');
+const refreshService = require('./refresh');
 const shortid = require('shortid');
+
+const config = require('../config');
 
 const table = 'ordenes';
 const createOrden = async (
@@ -161,7 +165,9 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
     });
 
     // mover la orden
-    await eventoService.put({
+    const evento = await eventoService.get();
+
+    await eventoService.editEvento({
       montoTotal: evento.montoTotal + pagado,
       catonesComprados: evento.catonesComprados + cantidadCartonesNuevos,
     });
@@ -177,11 +183,21 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
     // manda el correo con los pdfs
     if (correo) {
       const [user] = await store.get('users', {_id: id});
-      await correoService.correoConfirmation(
-          user.email,
-          await cartonesService.getCarton({user: id},
-          ));
+      const cartones = await cartonesService.getCarton({user: id});
+      const catalogos = await catalogoService.getCatalogo();
+      await axios({
+        method: 'post',
+        url: `${config.serviceCorreoUrl}/api`,
+        data: {
+          key: config.serviceCorreoKey,
+          email: user.email,
+          cartones,
+          catalogos,
+        },
+      });
     }
+
+    refreshService(id);
 
     // retornar
     return newOrdenEnd;

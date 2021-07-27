@@ -17,8 +17,6 @@ const io = new Server(server, {
   },
 });
 
-console.log(config.ssrUrl, config.adminUrl);
-
 instrument(io, {
   auth: {
     type: 'basic',
