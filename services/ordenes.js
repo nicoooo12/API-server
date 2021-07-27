@@ -166,7 +166,6 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
 
     // mover la orden
     const evento = await eventoService.get();
-
     await eventoService.editEvento({
       montoTotal: evento.montoTotal + pagado,
       catonesComprados: evento.catonesComprados + cantidadCartonesNuevos,
