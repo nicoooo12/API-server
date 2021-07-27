@@ -3,11 +3,7 @@ const store = require('../libs/mongoose');
 // crud
 
 const table = 'cartones';
-<<<<<<< HEAD
-const createCarton = async (propietario, serie) => {
-=======
 const createCarton = async (propietario, serie ) => {
->>>>>>> 1dd8b8fc6102a84272ef211b7deee14dcc1d1f94
   try {
     let bucle = true;
     let resultado;
