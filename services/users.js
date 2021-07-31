@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const collection = 'users';
 const store = require('../libs/mongoose');
-const boom = require('@hapi/boom');
+// const boom = require('@hapi/boom');
 
 
 const getUser = async ({email}) => {
@@ -15,7 +15,7 @@ const createUser = async ({user}) => {
 
 
   if (queriedUser) {
-    throw boom.badRequest('busy account');
+    throw new Error('busy account');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);

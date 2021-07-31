@@ -9,6 +9,11 @@ const shortid = require('shortid');
 const config = require('../config');
 
 const table = 'ordenes';
+
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 const createOrden = async (
     compra, // Array
     totalPago, // Number
@@ -147,6 +152,23 @@ const cancelOrden = async (id) => {
   }
 };
 
+const sendEmail = async (id) => {
+  await sleep(5000);
+  const [user] = await store.get('users', {_id: id});
+  const cartones = await cartonesService.getCarton({user: id});
+  const catalogos = await catalogoService.getCatalogo();
+  await axios({
+    method: 'post',
+    url: `${config.serviceCorreoUrl}/api`,
+    data: {
+      key: config.serviceCorreoKey,
+      email: user.email,
+      cartones,
+      catalogos,
+    },
+  });
+};
+
 const terminarOrden = async (id, pagado, correo = false, comment) => {
   try {
     // crea los cartones
@@ -181,19 +203,7 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
 
     // manda el correo con los pdfs
     if (correo) {
-      const [user] = await store.get('users', {_id: id});
-      const cartones = await cartonesService.getCarton({user: id});
-      const catalogos = await catalogoService.getCatalogo();
-      await axios({
-        method: 'post',
-        url: `${config.serviceCorreoUrl}/api`,
-        data: {
-          key: config.serviceCorreoKey,
-          email: user.email,
-          cartones,
-          catalogos,
-        },
-      });
+      sendEmail(id);
     }
 
     refreshService(id);
