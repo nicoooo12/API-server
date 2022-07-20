@@ -42,10 +42,10 @@ const authApi = (app) => {
             return next(error);
           }
 
-          apiKeyToken = user.isAdmin ?
+          const setApiKeyToken = user.isAdmin ?
             config.adminApiKeyToken : config.publicApiKeyToken;
 
-          const apiKey = apiKeysService.getApiKey({token: apiKeyToken});
+          const apiKey = apiKeysService.getApiKey({token: setApiKeyToken});
           if (!apiKey) {
             return next(boom.unauthorized());
           }
