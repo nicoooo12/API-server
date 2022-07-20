@@ -42,8 +42,6 @@ const authApi = (app) => {
             return next(error);
           }
 
-          console.log(user);
-
           const setApiKeyToken = user.isAdmin ?
             config.adminApiKeyToken : config.publicApiKeyToken;
 
