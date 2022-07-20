@@ -21,7 +21,7 @@ passport.use(
           _id: user._id,
           name: user.name,
           email: user.email,
-          idAdmin: user.isAdmin,
+          isAdmin: user.isAdmin,
         };
         return cb(null, returnUser);
       } catch (error) {
