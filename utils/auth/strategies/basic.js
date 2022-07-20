@@ -4,7 +4,6 @@ const boom = require('@hapi/boom');
 const bcrypt = require('bcrypt');
 
 const userService = require('../../../services/users');
-const config = require('../../../config');
 
 passport.use(
     new BasicStrategy(async function(email, password, cb) {
@@ -22,7 +21,7 @@ passport.use(
           _id: user._id,
           name: user.name,
           email: user.email,
-          idAdmin: user.isAdmin ? config.adminApiKeyToken : false,
+          idAdmin: user.isAdmin,
         };
         return cb(null, returnUser);
       } catch (error) {
