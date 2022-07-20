@@ -52,13 +52,13 @@ const authApi = (app) => {
             return next(boom.unauthorized());
           }
 
-          const {_id: id, name, email} = user;
+          const {_id: id, name, email, isAdmin} = user;
 
           const payload = {
             sub: id,
             name,
             email,
-            isAdmin: user.isAdmin ? config.adminApiKeyToken : false,
+            isAdmin: isAdmin ? config.adminApiKeyToken : false,
             scopes: apiKey,
           };
 
@@ -72,7 +72,7 @@ const authApi = (app) => {
               id,
               name,
               email,
-              isAdmin: user.isAdmin ? config.adminApiKeyToken : false,
+              isAdmin: isAdmin ? config.adminApiKeyToken : false,
             },
           });
         });
