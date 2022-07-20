@@ -6,6 +6,7 @@ const mySchemaUsers = new Schema({
   email: String,
   // telefono: Number,
   password: String,
+  isAdmin: Boolean,
 });
 
 const mySchemaCartones = new Schema({
@@ -52,6 +53,7 @@ const mySchemaEvento = new Schema({
   montoTotal: Number,
   catonesComprados: Number,
   fecha: String,
+  superUsuario: String,
 });
 
 const mySchemaPlay = new Schema({

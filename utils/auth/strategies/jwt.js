@@ -25,6 +25,7 @@ passport.use(
               _id: user._id,
               name: user.name,
               email: user.email,
+              idAdmin: user.isAdmin ? config.adminApiKeyToken : false,
               scopes: tokenPayload.scopes,
             });
           } catch (error) {

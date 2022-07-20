@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const debugApp = require('debug')('app:index');
 
 const app = express();
 const config = require('./config');
@@ -61,6 +62,16 @@ app.use((req, res)=>{
 app.use(logErrors);
 app.use(wrapErrors);
 app.use(errorHandler);
+
+// catching exceptions
+process.on('uncaughtException', (err) => {
+  debugApp('uncaughtException :: Fatal Error');
+  debugApp(err);
+});
+process.on('unhandledRejection', (err) => {
+  debugApp('unhandledRejection :: Fatal Error');
+  debugApp(err);
+});
 
 server.listen(config.port, () => {
   console.log(`server listening on port ${config.port}

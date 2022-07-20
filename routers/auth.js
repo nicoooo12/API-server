@@ -42,6 +42,9 @@ const authApi = (app) => {
             return next(error);
           }
 
+          apiKeyToken = user.isAdmin ?
+            config.adminApiKeyToken : config.publicApiKeyToken;
+
           const apiKey = apiKeysService.getApiKey({token: apiKeyToken});
           if (!apiKey) {
             return next(boom.unauthorized());
@@ -53,6 +56,7 @@ const authApi = (app) => {
             sub: id,
             name,
             email,
+            isAdmin: user.isAdmin ? config.adminApiKeyToken : false,
             scopes: apiKey,
           };
 
@@ -60,7 +64,15 @@ const authApi = (app) => {
             expiresIn: '20d',
           });
 
-          return res.status(200).json({token, user: {id, name, email}});
+          return res.status(200).json({
+            token,
+            user: {
+              id,
+              name,
+              email,
+              isAdmin: user.isAdmin ? config.adminApiKeyToken : false,
+            },
+          });
         });
       } catch (error) {
         next(error);
@@ -139,3 +151,4 @@ const authApi = (app) => {
 };
 
 module.exports = authApi;
+
