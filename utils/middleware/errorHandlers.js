@@ -1,5 +1,6 @@
 const boom = require('@hapi/boom');
 const config = require('../../config');
+const debugApp = require('debug')('app:error');
 
 const withErrorStack = (error, stack) => {
   if (config.dev) {
@@ -10,7 +11,7 @@ const withErrorStack = (error, stack) => {
 };
 
 const logErrors = (err, req, res, next) => {
-  console.log(err);
+  debugApp(err);
   next(err);
 };
 
@@ -26,7 +27,7 @@ const errorHandler = (err, req, res) => {
   const {
     output: {statusCode, payload},
   } = err;
-  console.log('send Error')
+  debugApp('send Error');
   res.json(withErrorStack(payload, err.stack)).status(statusCode);
 };
 
