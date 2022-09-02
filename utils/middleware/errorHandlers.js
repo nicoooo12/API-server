@@ -23,7 +23,7 @@ const wrapErrors = (err, req, res, next) => {
   next(err);
 };
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
   const {
     output: {statusCode, payload},
   } = err;
