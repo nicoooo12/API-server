@@ -5,32 +5,13 @@ const debugApp = require('debug')('app:index');
 
 const app = express();
 const config = require('./config');
-const server = require('http').createServer(app);
-const {Server} = require('socket.io');
-const {instrument} = require('@socket.io/admin-ui');
-const io = new Server(server, {
-  cors: {
-    origin: [
-      'https://admin.socket.io',
-      config.ssrUrl,
-      config.adminUrl,
-    ],
-  },
-});
-
-instrument(io, {
-  auth: {
-    type: 'basic',
-    username: config.socketUser,
-    password: config.socketPassword,
-  },
-});
 
 const {
   logErrors,
   wrapErrors,
   errorHandler,
 } = require('./utils/middleware/errorHandlers');
+
 require('./libs/mongoose/connect.js')(config.db);
 
 // middleware
@@ -41,14 +22,12 @@ app.use(express.json());
 app.use(helmet());
 
 // routers
-require('./routers/auth')(app);
-require('./routers/cartones')(app);
-require('./routers/catalogos')(app);
-require('./routers/orden')(app);
-require('./routers/play')(app);
-require('./routers/main')(app);
-require('./routers/sockets')(app, io);
-// require('./routers/premios')(app);
+require('./routers/auth')(app); //
+require('./routers/cartones')(app); //
+require('./routers/catalogos')(app); //
+require('./routers/orden')(app); //
+require('./routers/play')(app); //
+require('./routers/main')(app); //
 
 // 404 not found
 app.use((req, res)=>{
@@ -73,7 +52,12 @@ process.on('unhandledRejection', (err) => {
   debugApp(err);
 });
 
-server.listen(config.port, () => {
-  console.log(`server listening on port ${config.port}
-in ${config.dev ? 'development' : 'production'} mode`);
+// server.listen(config.port, () => {
+app.listen(config.port, () => {
+  debugApp(
+      `server listening on port ${
+        config.port
+      } in ${
+      config.dev ? 'development' : 'production'
+      } mode`);
 });

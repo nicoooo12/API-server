@@ -7,8 +7,9 @@
     "node": "14.17.x"
   },
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
+    "start": "DEBUG=app:* node index",
+    "dev": "DEBUG=app:* nodemon index",
+    "debug": "DEBUG=express:*,app:* nodemon index"
   },
   "keywords": [],
   "author": "Nicolás Flores <nicoflores.dev@gmail.com>",
@@ -16,11 +17,14 @@
   "dependencies": {
     "@hapi/boom": "^9.1.2",
     "@socket.io/admin-ui": "^0.2.0",
+    "apollo-server-express": "^3.10.2",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "graphql": "^16.6.0",
+    "graphql-tools": "^8.3.4",
     "helmet": "^4.6.0",
     "html-pdf-node": "^1.0.7",
     "joi": "^17.4.0",
@@ -28,7 +32,7 @@
     "mongoose": "^5.12.3",
     "multer": "^1.4.2",
     "nodemailer": "^6.5.0",
-    "passport": "^0.4.1",
+    "passport": "^0.6.0",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.0",
     "puppeteer": "^9.0.0",
@@ -40,7 +44,7 @@
     "assert": "^2.0.0",
     "eslint": "^7.29.0",
     "eslint-config-google": "^0.14.0",
-    "mocha": "^8.3.2",
+    "mocha": "^10.0.0",
     "nodemon": "^2.0.6",
     "proxyquire": "^2.1.3",
     "sinon": "^10.0.0",
