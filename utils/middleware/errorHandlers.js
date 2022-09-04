@@ -22,11 +22,11 @@ const wrapErrors = (err, req, res, next) => {
   next(err);
 };
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
   const {
     output: {statusCode, payload},
   } = err;
-  console.log('send Error')
+  console.log('send Error');
   res.json(withErrorStack(payload, err.stack)).status(statusCode);
 };
 
