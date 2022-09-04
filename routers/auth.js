@@ -56,7 +56,7 @@ const authApi = (app) => {
             sub: id,
             name,
             email,
-            isAdmin: isAdmin ? config.adminApiKeyToken : false,
+            isAdmin: isAdmin,
             scopes: apiKey,
           };
 
