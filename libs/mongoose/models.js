@@ -90,7 +90,7 @@ const catalogos = mongoose.model('catalogos', mySchemaCatalogos);//*
 const plays = mongoose.model('plays', mySchemaPlay);
 const evento = mongoose.model('evento_s', mySchemaEvento);
 const errores = mongoose.model('errores', mySchemaErrores);
-const notification = mongoose.model('errores', mySchemaNotification);
+const notification = mongoose.model('notification', mySchemaNotification);
 
 module.exports = {
   users,
