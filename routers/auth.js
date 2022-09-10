@@ -70,7 +70,7 @@ const authApi = (app) => {
               id,
               name,
               email,
-              isAdmin: isAdmin ? config.adminApiKeyToken : false,
+              isAdmin: isAdmin,
             },
           });
         });
