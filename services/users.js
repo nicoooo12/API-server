@@ -9,6 +9,11 @@ const getUser = async ({email}) => {
   return user;
 };
 
+const getUserById = async (id) => {
+  const [user] = await store.get(collection, {_id: id});
+  return user;
+};
+
 const createUser = async ({user}) => {
   const {name, email, password} = user;
   const queriedUser = await getUser({email});
@@ -42,4 +47,5 @@ module.exports = {
   createUser,
   getUser,
   updateUser,
+  getUserById,
 };

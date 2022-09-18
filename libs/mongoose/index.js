@@ -14,6 +14,10 @@ const get = (tabla, id=null) => {
     }
 
     const resultado = await store.get(tabla, id);
+    resultado.body = resultado.body.map(
+        (e)=>{
+          return {...e._doc, _id: e._id.toString()};
+        });
     if (resultado.error === true) {
       return reject(resultado.body);
     } else {

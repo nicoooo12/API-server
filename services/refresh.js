@@ -1,16 +1,16 @@
 const axios = require('axios');
-
+const config = require('../config');
 const refresh = async (id) => {
   try {
     if (id) {
       await axios({
         method: 'post',
-        url: `/sockets/updateInfo/${id}`,
+        url: `${config.ssrUrl}/sockets/updateInfo/${id}`,
       });
     } else {
       await axios({
         method: 'post',
-        url: `/sockets/updateInfo`,
+        url: `${config.ssrUrl}/sockets/updateInfo`,
       });
     }
   } catch (error) {

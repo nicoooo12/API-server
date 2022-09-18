@@ -38,6 +38,12 @@ const mySchemaOrdenes = new Schema({
   username: String,
   message: String,
   code: String,
+  fecha: {
+    type: Date,
+    default: function() {
+      return Date.now();
+    },
+  },
 });
 
 const mySchemaOrdenesTerminadas = new Schema({
@@ -47,6 +53,12 @@ const mySchemaOrdenesTerminadas = new Schema({
   user: String,
   comment: String,
   code: String,
+  fecha: {
+    type: Date,
+    default: function() {
+      return Date.now();
+    },
+  },
 });
 
 const mySchemaEvento = new Schema({
@@ -73,7 +85,7 @@ const mySchemaErrores = new Schema({
 const mySchemaNotification = new Schema({
   title: String,
   body: String,
-  for: String,
+  for: Array,
   read: Array,
 });
 

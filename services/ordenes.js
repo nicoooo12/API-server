@@ -1,18 +1,12 @@
 const store = require('../libs/mongoose');
-const axios = require('axios');
-const catalogoService = require('./catalogos');
 const cartonesService = require('./cartones');
 const eventoService = require('./evento');
 const refreshService = require('./refresh');
 const shortid = require('shortid');
 
-const config = require('../config');
+const {sendConfirmationEmail} = require('./correo');
 
 const table = 'ordenes';
-
-const sleep = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
 
 const createOrden = async (
     compra, // Array
@@ -152,23 +146,6 @@ const cancelOrden = async (id) => {
   }
 };
 
-const sendEmail = async (id) => {
-  await sleep(5000);
-  const [user] = await store.get('users', {_id: id});
-  const cartones = await cartonesService.getCarton({user: id});
-  const catalogos = await catalogoService.getCatalogo();
-  await axios({
-    method: 'post',
-    url: `${config.serviceCorreoUrl}/api`,
-    data: {
-      key: config.serviceCorreoKey,
-      email: user.email,
-      cartones,
-      catalogos,
-    },
-  });
-};
-
 const terminarOrden = async (id, pagado, correo = false, comment) => {
   try {
     // crea los cartones
@@ -178,11 +155,13 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
       throw new Error('orden terminada');
     }
 
+    const cartones = [];
     let cantidadCartonesNuevos = 0;
     await orden[0].compra.map(async (e)=>{
       cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
       for (let i=1; i<= e.cantidad; i++) {
-        await cartonesService.createCarton(id, e.serie);
+        const currentCarton = await cartonesService.createCarton(id, e.serie);
+        cartones.push(currentCarton);
       }
     });
 
@@ -203,7 +182,7 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
 
     // manda el correo con los pdfs
     if (correo) {
-      sendEmail(id);
+      sendConfirmationEmail(id, cartones, orden[0].compra);
     }
 
     refreshService(id);

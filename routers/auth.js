@@ -128,6 +128,12 @@ const authApi = (app) => {
         }).status(200);
       });
 
+  router.get('/test',
+      passport.authenticate('jwt', {session: false}),
+      scopesValidationHandler(['read:admin']),
+      (req, res)=>{
+        res.send('ok');
+      });
   router.get('/:correo',
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['read:cartonUser']),

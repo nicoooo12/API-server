@@ -18,7 +18,6 @@ module.exports = function(app) {
       async (req, res, next)=>{
         try {
           let initialState;
-          const vars = await eventoService.get();
 
           if (req.headers.authorization) {
             await passport.authenticate('jwt',
@@ -29,28 +28,39 @@ module.exports = function(app) {
                 id: req.user._id,
               };
 
-              const cartones = await CartonesService
-                  .getCarton({user: req.user._id});
-              const myInProgressOrden = await OrdenesService
-                  .getOrden(req.user._id);
-              const myEndsOrden = await OrdenesService
-                  .getOrdenTerminadas(req.user._id);
-              const catalogo = await catalogoService.getCatalogo();
-              const play = await PlayService.getPlay();
+              const [
+                vars, cartones, myInProgressOrden, myEndsOrden, catalogo, play,
+              ] = await Promise.all([
+                eventoService.get(),
+                CartonesService.getCarton({user: req.user._id}),
+                OrdenesService.getOrden(req.user._id),
+                OrdenesService.getOrdenTerminadas(req.user._id),
+                catalogoService.getCatalogo(),
+                PlayService.getPlay(),
+              ]);
+              // const vars = await eventoService.get();
+              // const cartones = await CartonesService
+              //     .getCarton({user: req.user._id});
+              // const myInProgressOrden = await OrdenesService
+              //     .getOrden(req.user._id);
+              // const myEndsOrden = await OrdenesService
+              //     .getOrdenTerminadas(req.user._id);
+              // const catalogo = await catalogoService.getCatalogo();
+              // const play = await PlayService.getPlay();
 
               initialState = {
                 'user': user,
                 'vars': {
-                  pago: vars._doc.pago,
-                  contacto: vars._doc.contacto,
-                  subTitle: vars._doc.subTitle,
-                  title: vars._doc.title,
-                  contacto: vars._doc.contacto,
+                  pago: vars.pago,
+                  contacto: vars.contacto,
+                  subTitle: vars.subTitle,
+                  title: vars.title,
+                  contacto: vars.contacto,
                 },
                 'redirect': '',
                 'cartonesUser': cartones.map((e)=>{
                   return {
-                    ...e._doc,
+                    ...e,
                     play: [
                       [false, false, false, false, false],
                       [false, false, false, false, false],
@@ -79,14 +89,18 @@ module.exports = function(app) {
               }).status(200);
             });
           } else {
-            const catalogo = await catalogoService.getCatalogo();
+            const [vars, catalogo] = await Promise.all([
+              eventoService.get(), catalogoService.getCatalogo(),
+            ]);
+            // const vars = await eventoService.get();
+            // const catalogo = await catalogoService.getCatalogo();
             initialState = {
               'user': {},
               'vars': {
-                pago: vars._doc.pago,
-                contacto: vars._doc.contacto,
-                subTitle: vars._doc.subTitle,
-                title: vars._doc.title,
+                pago: vars.pago,
+                contacto: vars.contacto,
+                subTitle: vars.subTitle,
+                title: vars.title,
               },
               'redirect': '',
               'cartonesUser': [],
@@ -142,7 +156,7 @@ module.exports = function(app) {
                 'user': user,
                 'cartonesUser': cartones.map((e)=>{
                   return {
-                    ...e._doc,
+                    ...e,
                     play: [
                       [false, false, false, false, false],
                       [false, false, false, false, false],
