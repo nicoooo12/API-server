@@ -26,7 +26,8 @@ module.exports = function(app) {
       async (req, res, next)=>{
         try {
           const {
-            premios, titulo, subTitulo, precio, enVenta, serie, color, icon,
+            premios, titulo, subTitulo, precio,
+            enVenta, serie, color, icon, promo,
           } = req.body;
           const newCatalogo = await catalogoService.createCatalogo(
               premios,
@@ -37,6 +38,7 @@ module.exports = function(app) {
               serie,
               color,
               icon,
+              promo,
           );
 
           await refresh();

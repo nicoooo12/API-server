@@ -9,7 +9,7 @@ const get = async ()=> {
 
 const editEvento = async (data) => {
   const eventoId = await get();
-  const editedEvent = await store.put(table, eventoId._id, data);
+  const editedEvent = await store.put(table, {_id: eventoId._id}, data);
 
   return editedEvent;
 };

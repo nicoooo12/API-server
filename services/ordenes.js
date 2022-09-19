@@ -157,20 +157,34 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
 
     const cartones = [];
     let cantidadCartonesNuevos = 0;
+
     await orden[0].compra.map(async (e)=>{
-      cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
-      for (let i=1; i<= e.cantidad; i++) {
-        const currentCarton = await cartonesService.createCarton(id, e.serie);
-        cartones.push(currentCarton);
+      if (e.serie === 0) { // <- Promo
+        await e.promo.map( async (p) => {
+          // eslint-disable-next-line max-len
+          cantidadCartonesNuevos = cantidadCartonesNuevos + (p.cantidad * e.cantidad);
+          for (let i=1; i<= (p.cantidad * e.cantidad); i++) {
+            const currentCarton = await cartonesService
+                .createCarton(id, p.serie);
+            cartones.push(currentCarton);
+          }
+        });
+      } else {
+        cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
+        for (let i=1; i<= e.cantidad; i++) {
+          const currentCarton = await cartonesService.createCarton(id, e.serie);
+          cartones.push(currentCarton);
+        }
       }
     });
 
-    // mover la orden
+    // contabilidad
     const evento = await eventoService.get();
     await eventoService.editEvento({
-      montoTotal: evento.montoTotal + pagado,
-      catonesComprados: evento.catonesComprados + cantidadCartonesNuevos,
+      montoTotal: (evento.montoTotal + pagado),
+      catonesComprados: (evento.catonesComprados + cantidadCartonesNuevos),
     });
+    // mover la orden
     const newOrdenEnd = await store.post('ordenesTerminadas', {
       compra: orden[0].compra,
       pago: orden[0].totalPago,

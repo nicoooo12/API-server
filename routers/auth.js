@@ -92,8 +92,12 @@ const authApi = (app) => {
         try {
           const createdUserId = await usersService.createUser({user});
 
+          if (createdUserId.err) {
+            return next(boom.badRequest(createdUserId.message));
+          }
+
           res.status(201).json({
-            data: createdUserId,
+            data: createdUserId.data,
             message: 'user created',
           });
         } catch (error) {

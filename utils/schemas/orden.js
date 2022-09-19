@@ -10,6 +10,8 @@ const createOrdenSchema =Joi.object({
             cantidad: Joi
                 .number()
                 .required(),
+            promo: Joi
+                .array(),
           }),
       )
       .required(),
@@ -31,6 +33,8 @@ const editOrdenSchema =Joi.object({
             cantidad: Joi
                 .number()
                 .required(),
+            promo: Joi
+                .array(),
           }),
       ),
   totalPago: Joi

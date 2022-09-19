@@ -20,7 +20,10 @@ const createUser = async ({user}) => {
 
 
   if (queriedUser) {
-    throw new Error('busy account');
+    return {
+      err: true,
+      message: 'busy account',
+    };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,7 +34,10 @@ const createUser = async ({user}) => {
     password: hashedPassword,
   });
 
-  return createUser._id;
+  return {
+    err: false,
+    data: createUser._id,
+  };
 };
 
 const updateUser = async (id, data) => {

@@ -2,6 +2,7 @@ const axios = require('axios');
 const catalogoService = require('./catalogos');
 const cartonesService = require('./cartones');
 const userService = require('./users');
+const eventoService = require('./evento');
 
 const config = require('../config');
 
@@ -17,7 +18,10 @@ const sendConfirmationEmail = async (id, cartones, orden) => {
   } else {
     cartonesSend = cartones;
   }
-  const catalogos = await catalogoService.getCatalogo();
+  const [catalogos, evento] = await Promise.all([
+    catalogoService.getCatalogo(), eventoService.get(),
+  ]);
+
   await axios({
     method: 'post',
     url: `${config.serviceCorreoUrl}/api`,
@@ -28,6 +32,7 @@ const sendConfirmationEmail = async (id, cartones, orden) => {
       cartones: cartonesSend,
       catalogos,
       orden,
+      fecha: evento.fecha,
     },
   });
 };

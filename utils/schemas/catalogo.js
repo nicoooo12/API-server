@@ -13,6 +13,8 @@ const createCatalogoSchema =Joi.object({
   titulo: Joi
       .string()
       .required(),
+  promo: Joi
+      .array(),
   subTitulo: Joi
       .string()
       .required(),

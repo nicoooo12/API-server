@@ -12,6 +12,7 @@ const createCatalogo = async (
     serie,
     color,
     icon,
+    promo,
 ) => {
   try {
     const getCatalogo = await store.get(table, {});
@@ -28,6 +29,7 @@ const createCatalogo = async (
       serie,
       color,
       icon,
+      promo,
     });
 
     return newCatalogo;

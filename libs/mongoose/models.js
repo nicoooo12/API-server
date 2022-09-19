@@ -25,6 +25,7 @@ const mySchemaCatalogos = new Schema({
   serie: Number,
   color: String,
   icon: String,
+  promo: Array,
 });
 
 const mySchemaOrdenes = new Schema({
@@ -65,6 +66,7 @@ const mySchemaEvento = new Schema({
   montoTotal: Number,
   catonesComprados: Number,
   fecha: String,
+  pago: Object,
   superUsuario: String,
 });
 
