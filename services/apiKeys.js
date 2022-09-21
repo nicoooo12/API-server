@@ -16,6 +16,7 @@ const getApiKey = ({token}) => {
       'read:notification',
       'deleted:notification',
       'markAsRead:notification',
+      'markAsActive:code',
     ];
   } else if (token === config.adminApiKeyToken) {
     return [
@@ -50,6 +51,10 @@ const getApiKey = ({token}) => {
       'create:notification',
       'deleted:notification',
       'markAsRead:notification',
+      'read:code',
+      'create:code',
+      'markAsActive:code',
+      'deleted:code',
     ];
   }
   return boom.badRequest('token not valid');

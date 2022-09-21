@@ -28,6 +28,7 @@ require('./routers/catalogos')(app); //
 require('./routers/orden')(app); //
 require('./routers/play')(app); //
 require('./routers/notification')(app); //
+require('./routers/codes')(app); //
 require('./routers/main')(app); //
 
 // 404 not found

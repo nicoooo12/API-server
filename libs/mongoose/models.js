@@ -91,6 +91,12 @@ const mySchemaNotification = new Schema({
   read: Array,
 });
 
+const mySchemaCodes = new Schema({
+  code: String,
+  user: String,
+  active: String,
+});
+
 const users = mongoose.model('users', mySchemaUsers);//*
 const cartones = mongoose.model('cartones', mySchemaCartones);//*
 const ordenes = mongoose.model('ordenes', mySchemaOrdenes);//*
@@ -105,6 +111,7 @@ const plays = mongoose.model('plays', mySchemaPlay);
 const evento = mongoose.model('evento_s', mySchemaEvento);
 const errores = mongoose.model('errores', mySchemaErrores);
 const notification = mongoose.model('notification', mySchemaNotification);
+const codes = mongoose.model('codes', mySchemaCodes);
 
 module.exports = {
   users,
@@ -116,4 +123,5 @@ module.exports = {
   errores,
   ordenesTerminadas,
   notification,
+  codes,
 };
