@@ -165,6 +165,7 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
           {serie: 2, cantidad: 1*e.cantidad},
           {serie: 4, cantidad: 1*e.cantidad}];
       }
+      return e;
     }).flat();
 
     await orden[0].compra.map(async (e)=>{
