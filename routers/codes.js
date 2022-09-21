@@ -63,6 +63,29 @@ module.exports = function(app) {
           next(error);
         }
       });
+  router.post('/canjear/:code', // create
+      passport.authenticate('jwt', {session: false}),
+      scopesValidationHandler(['canjear:code']),
+      async (req, res, next) => {
+        try {
+          const {code} = req.params;
+          const createCode = await codesService
+              .canjear(code, req.user._id, req.user.email);
+
+          if (createCode.err) {
+            return res.status(200).json({
+              message: 'ya canjeado',
+            });
+          }
+
+          return res.json({
+            message: 'ok',
+            data: createCode,
+          }).status(200);
+        } catch (error) {
+          next(error);
+        }
+      });
   router.post('/active/:code',
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['markAsActive:code']),

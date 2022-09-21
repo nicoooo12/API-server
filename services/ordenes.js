@@ -158,25 +158,43 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
     const cartones = [];
     let cantidadCartonesNuevos = 0;
 
-    await orden[0].compra.map(async (e)=>{
-      if (e.serie === 0) { // <- Promo
-        await e.promo.map( async (p) => {
-          // eslint-disable-next-line max-len
-          cantidadCartonesNuevos = cantidadCartonesNuevos + (p.cantidad * e.cantidad);
-          for (let i=1; i<= (p.cantidad * e.cantidad); i++) {
-            const currentCarton = await cartonesService
-                .createCarton(id, p.serie);
-            cartones.push(currentCarton);
-          }
-        });
-      } else {
-        cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
-        for (let i=1; i<= e.cantidad; i++) {
-          const currentCarton = await cartonesService.createCarton(id, e.serie);
-          cartones.push(currentCarton);
-        }
+    orden[0].compra = orden[0].compra.map((e)=>{
+      if (e.serie === 0) {
+        return [
+          {serie: 1, cantidad: 1*e.cantidad},
+          {serie: 2, cantidad: 1*e.cantidad},
+          {serie: 4, cantidad: 1*e.cantidad}];
       }
+    }).flat();
+
+    await orden[0].compra.map(async (e)=>{
+      Array(e.cantidad).fill('', 0, e.cantidad).map(async (o, index)=>{
+        const currentCarton = await cartonesService
+            .createCarton(id, e.serie, cantidadCartonesNuevos + index);
+        cartones.push(currentCarton);
+      });
+      cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
     });
+    //   await orden[0].compra.map(async (e)=>{
+    //   if (e.serie === 0) { // <- Promo
+    //     await e.promo.map( async (p) => {
+    // eslint-disable-next-line max-len
+    //        cantidadCartonesNuevos = cantidadCartonesNuevos + (p.cantidad * e.cantidad);
+    //       for (let i=1; i<= (p.cantidad * e.cantidad); i++) {
+    //         const currentCarton = await cartonesService
+    //             .createCarton(id, p.serie);
+    //         cartones.push(currentCarton);
+    //       }
+    //     });
+    //   } else {
+    //     cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
+    //     for (let i=1; i<= e.cantidad; i++) {
+    // eslint-disable-next-line max-len
+    //       const currentCarton = await cartonesService.createCarton(id, e.serie);
+    //       cartones.push(currentCarton);
+    //     }
+    //   }
+    // });
 
     // contabilidad
     const evento = await eventoService.get();

@@ -14,6 +14,7 @@ const mySchemaCartones = new Schema({
   title: String,
   data: Array,
   serie: Number,
+  code: String,
 });
 
 const mySchemaCatalogos = new Schema({

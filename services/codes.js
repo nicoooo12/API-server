@@ -1,8 +1,10 @@
 const store = require('../libs/mongoose');
-
-
+const cartonesService = require('./cartones');
+const eventoService = require('./evento');
+const refreshService = require('./refresh');
 // const config = require('../config');
 const table = 'codes';
+const {sendConfirmationEmail} = require('./correo');
 
 const getCodeByCode = async (code) => {
   try {
@@ -52,6 +54,61 @@ const deletedCodes = async (code) => {
   }
 };
 
+const canjear = async (code, user, correo) => {
+  try {
+    const [getCode] = await store.get(table, {code});
+    if (getCode.active != '') {
+      return {
+        err: true,
+        message: 'no valido',
+      };
+    }
+    const canje = await markAsActive(code, user);
+
+    const cartones = [];
+    let cantidadCartonesNuevos = 0;
+
+    [
+      {serie: 1, cantidad: 1},
+      {serie: 2, cantidad: 1},
+      {serie: 4, cantidad: 1},
+    ].map(async (e)=>{
+      Array(e.cantidad).fill('', 0, e.cantidad).map(async (o, index)=>{
+        const currentCarton = await cartonesService
+            .createCarton(user, e.serie, cantidadCartonesNuevos + index);
+        cartones.push(currentCarton);
+      });
+      cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
+    });
+
+    // contabilidad
+    const evento = await eventoService.get();
+    await eventoService.editEvento({
+      montoTotal: (evento.montoTotal + 6000),
+      catonesComprados: (evento.catonesComprados + cantidadCartonesNuevos),
+    });
+
+    // correo
+    sendConfirmationEmail(correo, cartones, [
+      {serie: 1, cantidad: 1},
+      {serie: 2, cantidad: 1},
+      {serie: 4, cantidad: 1},
+    ]);
+
+    refreshService(user);
+
+    return {
+      err: false,
+      data: {
+        canje,
+        cartones,
+      },
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const markAsActive = async (code, activeBy) => {
   try {
     const editCode = await store.put(
@@ -64,6 +121,7 @@ const markAsActive = async (code, activeBy) => {
 };
 
 module.exports = {
+  canjear,
   getCodeByUser,
   getCodeByCode,
   createCodes,

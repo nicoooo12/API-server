@@ -60,7 +60,6 @@ const put = async (tabla, id, data) => {
       body: 'la tabla no existe',
     };
   }
-
   try {
     // console.log(tabla, id);
     const getDato = await model[tabla].find(id);
@@ -106,9 +105,17 @@ const delt = (tabla, id) => {
   });
 };
 
+const count = async (tabla) => {
+  return new Promise(async (resolve, reject) => {
+    const current = await model[tabla].countDocuments();
+    resolve(current);
+  });
+};
+
 module.exports={
   get,
   post,
   put,
   delt,
+  count,
 };

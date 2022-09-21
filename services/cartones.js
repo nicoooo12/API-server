@@ -1,33 +1,37 @@
 const store = require('../libs/mongoose');
+const eventoService = require('./evento');
 // const boom = require('@hapi/boom')
 // crud
 
 const table = 'cartones';
-const createCarton = async (propietario, serie ) => {
-  try {
-    let bucle = true;
-    let resultado;
-    const catalogo = await store.get('catalogos', {serie});
-    // console.log(catalogo[0].titulo);
-    // catalogo[0].icon ? icon = catalogo.icon[0] : false
-    while (bucle) {
-      const dataGenerada = generar(catalogo[0].icon);
-      const carton = await store.get(table, {data: dataGenerada, serie});
-      if (!carton[0]) {
-        bucle=false;
-        const newCarton = await store.post(table, {
-          user: propietario,
-          title: catalogo[0].titulo,
-          data: dataGenerada,
-          serie,
-        });
-        resultado = newCarton;
+const createCarton = (propietario, serie, i = 0) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let bucle = true;
+      let resultado;
+      const catalogo = await store.get('catalogos', {serie});
+      const cartones = await eventoService.get();
+      const n = (cartones.catonesComprados + i) + 1;
+      while (bucle) {
+        const dataGenerada = generar(catalogo[0].icon);
+        const carton = await store.get(table, {data: dataGenerada, serie});
+        if (!carton[0]) {
+          bucle=false;
+          const newCarton = await store.post(table, {
+            user: propietario,
+            title: catalogo[0].titulo,
+            data: dataGenerada,
+            serie,
+            code: ('000000' + (n)).slice(-6),
+          });
+          resultado = newCarton;
+        }
       }
+      return resolve(resultado);
+    } catch (err) {
+      throw new Error(err);
     }
-    return resultado;
-  } catch (err) {
-    throw new Error(err);
-  }
+  });
 };
 
 const getCarton = async (id) => {

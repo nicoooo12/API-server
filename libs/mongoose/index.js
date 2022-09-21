@@ -76,4 +76,5 @@ module.exports = {
   post,
   put,
   delt,
+  count: store.count,
 };
