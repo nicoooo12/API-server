@@ -17,6 +17,7 @@ const getApiKey = ({token}) => {
       'deleted:notification',
       'markAsRead:notification',
       'markAsActive:code',
+      'read:code',
       'canjear:code',
     ];
   } else if (token === config.adminApiKeyToken) {
