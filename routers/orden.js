@@ -36,9 +36,9 @@ module.exports = function(app) {
               compra,
               totalPago,
               tipoDePago,
-              referido,
               req.user._id,
               req.user.name,
+              referido,
           );
 
           if (newOden.err) {
