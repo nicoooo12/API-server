@@ -54,6 +54,8 @@ const addCanvasUrl = async (code, canvasUrl) => {
       estado: 1, // 0: finalizado, 1: en revisión, 2: incida
     });
 
+    refreshService(orden[0].user);
+
     return editOrden;
   } catch (err) {
     throw new Error(err);
@@ -63,6 +65,8 @@ const addCanvasUrl = async (code, canvasUrl) => {
 const addComment = async (id, message) => {
   try {
     const editOrden = await store.put(table, {user: id}, {message});
+
+    refreshService(id);
 
     return editOrden;
   } catch (err) {
@@ -125,6 +129,7 @@ const getOrdenTerminadas = async (id) => {
 const editOrden = async (id, data) => {
   try {
     const editOrden = await store.put(table, {user: id}, data);
+    refreshService(id);
 
     return editOrden;
   } catch (err) {
@@ -141,6 +146,8 @@ const cancelOrden = async (id) => {
       return {message: 'order already deleted or does not exist'};
     } else {
       await store.delt(table, {user: id});
+
+      refreshService(id);
       return {message: 'cancel successfully'};
     }
   } catch (err) {
