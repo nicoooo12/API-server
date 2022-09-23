@@ -18,6 +18,9 @@ const createOrdenSchema =Joi.object({
   totalPago: Joi
       .number()
       .required(),
+  referido: Joi
+      .string()
+      .required(),
   tipoDePago: Joi
       .string()
       .required(),
