@@ -23,11 +23,12 @@ module.exports = function(app) {
           if (req.headers.authorization) {
             await passport.authenticate('jwt',
                 {session: false})(req, res, async (e) =>{
+              console.log(req.user);
               const user = {
                 name: req.user.name,
                 email: req.user.email,
                 id: req.user._id,
-                admin: req.user.admin,
+                admin: !!req.user.idAdmin,
               };
 
               const [
@@ -142,6 +143,7 @@ module.exports = function(app) {
                 name: req.user.name,
                 email: req.user.email,
                 id: req.user._id,
+                admin: !!req.user.idAdmin,
               };
               const [
                 cartones,
