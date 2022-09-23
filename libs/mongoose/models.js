@@ -35,6 +35,7 @@ const mySchemaOrdenes = new Schema({
   tipoDePago: String,
   estado: Number, // 0: finalizado, 1: en revisión, 2: iniciada
   canvasUrl: Boolean,
+  referido: String,
   imgUrl: String,
   user: String,
   username: String,
@@ -98,6 +99,10 @@ const mySchemaCodes = new Schema({
   active: String,
 });
 
+const mySchemaEntradas = new Schema({
+  user: String,
+});
+
 const users = mongoose.model('users', mySchemaUsers);//*
 const cartones = mongoose.model('cartones', mySchemaCartones);//*
 const ordenes = mongoose.model('ordenes', mySchemaOrdenes);//*
@@ -113,6 +118,7 @@ const evento = mongoose.model('evento_s', mySchemaEvento);
 const errores = mongoose.model('errores', mySchemaErrores);
 const notification = mongoose.model('notification', mySchemaNotification);
 const codes = mongoose.model('codes', mySchemaCodes);
+const entradas = mongoose.model('entradas', mySchemaEntradas);
 
 module.exports = {
   users,
@@ -125,4 +131,5 @@ module.exports = {
   ordenesTerminadas,
   notification,
   codes,
+  entradas,
 };

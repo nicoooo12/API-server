@@ -30,12 +30,13 @@ module.exports = function(app) {
       scopesValidationHandler(['create:myOrden']),
       validationHandler(createOrdenSchema),
       async (req, res, next)=>{
-        const {compra, totalPago, tipoDePago} = req.body;
+        const {compra, totalPago, tipoDePago, referido} = req.body;
         try {
           const newOden = await ordenServices.createOrden(
               compra,
               totalPago,
               tipoDePago,
+              referido,
               req.user._id,
               req.user.name,
           );

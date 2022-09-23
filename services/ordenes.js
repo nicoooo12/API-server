@@ -14,6 +14,7 @@ const createOrden = async (
     tipoDePago, // String
     user, // String
     username, // String
+    referido,
 ) => {
   try {
     const getOrden = await store.get(table, {user});
@@ -27,6 +28,7 @@ const createOrden = async (
       totalPago,
       tipoDePago,
       username,
+      referido,
       estado: 2, // 0: finalizado, 1: en revisión, 2: incida
       canvasUrl: false, // estado = 2 -> no canvas url
       user,
@@ -207,6 +209,7 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
     const newOrdenEnd = await store.post('ordenesTerminadas', {
       compra: orden[0].compra,
       pago: orden[0].totalPago,
+      referido: orden[0].referido,
       pagado,
       comment,
       user: id,

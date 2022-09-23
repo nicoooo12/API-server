@@ -7,6 +7,7 @@ const CartonesService = require('../services/cartones');
 const OrdenesService = require('../services/ordenes');
 const PlayService = require('../services/play');
 const eventoService = require('../services/evento');
+const codesService = require('../services/entradas');
 
 require('../utils/auth/strategies/jwt');
 
@@ -29,9 +30,16 @@ module.exports = function(app) {
               };
 
               const [
-                vars, cartones, myInProgressOrden, myEndsOrden, catalogo, play,
+                vars,
+                entradas,
+                cartones,
+                myInProgressOrden,
+                myEndsOrden,
+                catalogo,
+                play,
               ] = await Promise.all([
                 eventoService.get(),
+                codesService.getCountEntradas,
                 CartonesService.getCarton({user: req.user._id}),
                 OrdenesService.getOrden(req.user._id),
                 OrdenesService.getOrdenTerminadas(req.user._id),
@@ -50,13 +58,8 @@ module.exports = function(app) {
 
               initialState = {
                 'user': user,
-                'vars': {
-                  pago: vars.pago,
-                  contacto: vars.contacto,
-                  subTitle: vars.subTitle,
-                  title: vars.title,
-                  contacto: vars.contacto,
-                },
+                'vars': vars,
+                entradas,
                 'redirect': '',
                 'cartonesUser': cartones.map((e)=>{
                   return {
@@ -96,12 +99,7 @@ module.exports = function(app) {
             // const catalogo = await catalogoService.getCatalogo();
             initialState = {
               'user': {},
-              'vars': {
-                pago: vars.pago,
-                contacto: vars.contacto,
-                subTitle: vars.subTitle,
-                title: vars.title,
-              },
+              'vars': vars,
               'redirect': '',
               'cartonesUser': [],
               'ordenes': {
