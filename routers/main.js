@@ -27,6 +27,7 @@ module.exports = function(app) {
                 name: req.user.name,
                 email: req.user.email,
                 id: req.user._id,
+                admin: req.user.admin,
               };
 
               const [
