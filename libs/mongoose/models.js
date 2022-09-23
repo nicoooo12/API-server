@@ -70,6 +70,8 @@ const mySchemaEvento = new Schema({
   fecha: String,
   pago: Object,
   superUsuario: String,
+  monda: String,
+  simbolo: String,
 });
 
 const mySchemaPlay = new Schema({

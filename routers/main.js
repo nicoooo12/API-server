@@ -142,13 +142,23 @@ module.exports = function(app) {
                 email: req.user.email,
                 id: req.user._id,
               };
-              const cartones = await CartonesService
-                  .getCarton({user: req.user._id});
-              const myInProgressOrden = await OrdenesService
-                  .getOrden(req.user._id);
-              const myEndsOrden = await OrdenesService
-                  .getOrdenTerminadas(req.user._id);
-              const play = await PlayService.getPlay();
+              const [
+                cartones,
+                myInProgressOrden,
+                myEndsOrden, play,
+              ] = await Promise.all([
+                CartonesService.getCarton({user: req.user._id}),
+                OrdenesService.getOrden(req.user._id),
+                OrdenesService.getOrdenTerminadas(req.user._id),
+                PlayService.getPlay(),
+              ]);
+              // const cartones = await CartonesService
+              //  .getCarton({user: req.user._id});
+              // const myInProgressOrden = await OrdenesService
+              //     .getOrden(req.user._id);
+              // const myEndsOrden = await OrdenesService
+              // .getOrdenTerminadas(req.user._id);
+              // const play = await PlayService.getPlay();
 
               getState = {
                 'user': user,
