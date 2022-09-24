@@ -51,9 +51,9 @@ module.exports = function(app) {
       scopesValidationHandler(['create:code']),
       async (req, res, next) => {
         try {
-          const {code, user} = req.body;
+          const {code, user, entrada} = req.body;
           const createCode = await codesService
-              .createCodes(code, user);
+              .createCodes(code, user, entrada);
 
           res.json({
             message: 'ok',

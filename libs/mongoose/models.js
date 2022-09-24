@@ -99,6 +99,7 @@ const mySchemaCodes = new Schema({
   code: String,
   user: String,
   active: String,
+  entrada: Boolean,
 });
 
 const mySchemaEntradas = new Schema({

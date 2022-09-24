@@ -8,7 +8,7 @@ const getNotificationByUser = async (id) => {
   const personalNotifications = await store.get(table, {for: {$all: [id]}});
   const forAllNotifications = await store.get(table, {for: 'all'});
 
-  console.log(personalNotifications);
+  // console.log(personalNotifications);
 
   const allNotification = [...personalNotifications, ...forAllNotifications];
 

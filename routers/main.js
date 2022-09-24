@@ -7,7 +7,7 @@ const CartonesService = require('../services/cartones');
 const OrdenesService = require('../services/ordenes');
 const PlayService = require('../services/play');
 const eventoService = require('../services/evento');
-const codesService = require('../services/entradas');
+const entradasService = require('../services/entradas');
 
 require('../utils/auth/strategies/jwt');
 
@@ -23,7 +23,7 @@ module.exports = function(app) {
           if (req.headers.authorization) {
             await passport.authenticate('jwt',
                 {session: false})(req, res, async (e) =>{
-              console.log(req.user);
+              // console.log(req.user);
               const user = {
                 name: req.user.name,
                 email: req.user.email,
@@ -41,7 +41,7 @@ module.exports = function(app) {
                 play,
               ] = await Promise.all([
                 eventoService.get(),
-                codesService.getCountEntradas,
+                entradasService.getEntradaByUser(req.user._id),
                 CartonesService.getCarton({user: req.user._id}),
                 OrdenesService.getOrden(req.user._id),
                 OrdenesService.getOrdenTerminadas(req.user._id),
@@ -61,7 +61,7 @@ module.exports = function(app) {
               initialState = {
                 'user': user,
                 'vars': vars,
-                entradas,
+                'entrada': entradas.getEntrada,
                 'redirect': '',
                 'cartonesUser': cartones.map((e)=>{
                   return {
@@ -146,10 +146,12 @@ module.exports = function(app) {
                 admin: !!req.user.idAdmin,
               };
               const [
+                entrada,
                 cartones,
                 myInProgressOrden,
                 myEndsOrden, play,
               ] = await Promise.all([
+                entradasService.getEntradaByUser(req.user._id),
                 CartonesService.getCarton({user: req.user._id}),
                 OrdenesService.getOrden(req.user._id),
                 OrdenesService.getOrdenTerminadas(req.user._id),
@@ -165,6 +167,7 @@ module.exports = function(app) {
 
               getState = {
                 'user': user,
+                'entrada': entrada.getEntrada,
                 'cartonesUser': cartones.map((e)=>{
                   return {
                     ...e,

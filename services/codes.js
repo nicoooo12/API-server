@@ -1,6 +1,7 @@
 const store = require('../libs/mongoose');
 const cartonesService = require('./cartones');
 const eventoService = require('./evento');
+const entradaService = require('./entradas');
 const refreshService = require('./refresh');
 // const config = require('../config');
 const table = 'codes';
@@ -24,14 +25,14 @@ const getCodeByUser = async (user) => {
   }
 };
 
-const createCodes = async (code, user) => {
+const createCodes = async (code, user, entrada = false) => {
   try {
     const codes = await store.get(table, {code});
     if (codes[0]) {
       return {err: true};
     }
     const createCodes = await store.post(
-        table, {code, user, active: ''},
+        table, {code, user, active: '', entrada},
     );
     return {err: false, createCodes};
   } catch (error) {
@@ -87,6 +88,10 @@ const canjear = async (code, user, correo) => {
       montoTotal: (evento.montoTotal + 6000),
       catonesComprados: (evento.catonesComprados + cantidadCartonesNuevos),
     });
+
+    if (getCode.entrada) {
+      await entradaService.createEntrada(user);
+    }
 
     // correo
     sendConfirmationEmail(correo, cartones, [
