@@ -2,7 +2,8 @@ const bcrypt = require('bcrypt');
 const collection = 'users';
 const store = require('../libs/mongoose');
 // const boom = require('@hapi/boom');
-
+const correoService = require('./correo');
+const shortid = require('shortid');
 
 const getUser = async ({email}) => {
   const [user] = await store.get(collection, {email});
@@ -12,6 +13,51 @@ const getUser = async ({email}) => {
 const getUserById = async (id) => {
   const [user] = await store.get(collection, {_id: id});
   return user;
+};
+
+const changePasswordRequest = async (email) => {
+  const user = await getUser({email});
+  if (!user) {
+    return {
+      err: true,
+      message: 'not exist',
+    };
+  }
+
+  const code = shortid.generate();
+
+  correoService.sendCodeChangePassword(user, code);
+
+  await updateUser(user._id, {changePassword: code});
+
+  return {
+    err: false,
+  };
+};
+
+const changePassword = async (email, code, password) => {
+  const user = await getUser({email});
+  if (!user) {
+    return {
+      err: true,
+      message: 'not exist',
+    };
+  }
+
+  if (user.changePassword !== code) {
+    return {
+      err: true,
+      message: 'unauthorised',
+    };
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await updateUser(user._id, {changePassword: '', password: hashedPassword});
+
+  return {
+    err: false,
+  };
 };
 
 const createUser = async ({user}) => {
@@ -50,8 +96,10 @@ const updateUser = async (id, data) => {
 };
 
 module.exports = {
+  changePassword,
   createUser,
   getUser,
   updateUser,
   getUserById,
+  changePasswordRequest,
 };

@@ -7,6 +7,7 @@ const mySchemaUsers = new Schema({
   // telefono: Number,
   password: String,
   isAdmin: Boolean,
+  changePassword: String,
 });
 
 const mySchemaCartones = new Schema({

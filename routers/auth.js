@@ -12,6 +12,8 @@ require('../utils/middleware/scopeValidationHandler');
 const {
   createUserSchema,
   updateUserSchema,
+  forgottenPassword,
+  resetPassword,
 } = require('../utils/schemas/users');
 // const idSchema = require('../utils/schemas/id');
 
@@ -105,6 +107,40 @@ const authApi = (app) => {
         }
       });
 
+  router.post('/forgottenPassword',
+      validationHandler(forgottenPassword),
+
+      async (req, res, next)=>{
+        const {email} = req.body;
+
+        const request = await usersService.changePasswordRequest(email);
+
+        if (request.err) {
+          return next(request.message);
+        }
+
+        res.status(200).json({
+          massage: 'ok',
+        });
+      });
+
+  router.post('/resetPassword',
+      validationHandler(resetPassword),
+      async (req, res, next)=>{
+        const {email, code, password} = req.body;
+
+        const request = await usersService
+            .changePassword(email, code, password);
+
+        if (request.err) {
+          return next(request.message);
+        }
+
+        res.status(200).json({
+          massage: 'ok',
+        });
+      });
+
   router.put('/',
       passport.authenticate('jwt', {session: false}),
       validationHandler(updateUserSchema),
@@ -124,20 +160,6 @@ const authApi = (app) => {
         }
       });
 
-  router.get('/isauth',
-      passport.authenticate('jwt', {session: false}),
-      (req, res)=>{
-        res.json({
-          message: 'ok',
-        }).status(200);
-      });
-
-  router.get('/test',
-      passport.authenticate('jwt', {session: false}),
-      scopesValidationHandler(['read:admin']),
-      (req, res)=>{
-        res.send('ok');
-      });
   router.get('/:correo',
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['read:cartonUser']),

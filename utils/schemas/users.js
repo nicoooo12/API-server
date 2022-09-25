@@ -1,5 +1,22 @@
 const Joi = require('joi');
 
+const forgottenPassword = Joi.object({
+  email: Joi
+      .string()
+      .email()
+      .required(),
+});
+
+const resetPassword = Joi.object({
+  email: Joi
+      .string()
+      .email()
+      .required(),
+  code: Joi
+      .string()
+      .required(),
+  password: Joi.string().required(),
+});
 const createUserSchema =Joi.object({
   name: Joi
       .string()
@@ -26,4 +43,6 @@ const updateUserSchema =Joi.object({
 module.exports = {
   createUserSchema,
   updateUserSchema,
+  forgottenPassword,
+  resetPassword,
 };

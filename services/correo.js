@@ -24,7 +24,7 @@ const sendConfirmationEmail = async (id, cartones, orden) => {
 
   await axios({
     method: 'post',
-    url: `${config.serviceCorreoUrl}/api`,
+    url: `${config.serviceCorreoUrl}/api/sendConfirmationEmail`,
     data: {
       key: config.serviceCorreoKey,
       email: user.email,
@@ -37,6 +37,20 @@ const sendConfirmationEmail = async (id, cartones, orden) => {
   });
 };
 
+const sendCodeChangePassword = async (user, code) => {
+  await axios({
+    method: 'post',
+    url: `${config.serviceCorreoUrl}/api/sendCodeChangePassword`,
+    data: {
+      key: config.serviceCorreoKey,
+      email: user.email,
+      name: user.name,
+      code,
+    },
+  });
+};
+
 module.exports = {
   sendConfirmationEmail,
+  sendCodeChangePassword,
 };
