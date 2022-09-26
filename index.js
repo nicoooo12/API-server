@@ -30,6 +30,7 @@ require('./routers/play')(app); //
 require('./routers/notification')(app); //
 require('./routers/codes')(app); //
 require('./routers/main')(app); //
+require('./routers/test')(app); //
 
 // 404 not found
 app.use((req, res)=>{

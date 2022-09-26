@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const apiKeysService = require('../services/apiKeys');
 const usersService = require('../services/users');
 const validationHandler = require('../utils/middleware/validationHandler');
+const {sendCodeChangePassword} = require('../services/correo');
 
 const scopesValidationHandler =
 require('../utils/middleware/scopeValidationHandler');
@@ -118,6 +119,8 @@ const authApi = (app) => {
         if (request.err) {
           return next(request.message);
         }
+
+        sendCodeChangePassword(request.user, request.code);
 
         res.status(200).json({
           massage: 'ok',

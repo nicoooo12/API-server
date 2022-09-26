@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const collection = 'users';
 const store = require('../libs/mongoose');
 // const boom = require('@hapi/boom');
-const correoService = require('./correo');
 const shortid = require('shortid');
 
 const getUser = async ({email}) => {
@@ -26,12 +25,12 @@ const changePasswordRequest = async (email) => {
 
   const code = shortid.generate();
 
-  correoService.sendCodeChangePassword(user, code);
-
   await updateUser(user._id, {changePassword: code});
 
   return {
     err: false,
+    user,
+    code,
   };
 };
 
@@ -96,10 +95,10 @@ const updateUser = async (id, data) => {
 };
 
 module.exports = {
+  getUserById,
   changePassword,
   createUser,
   getUser,
   updateUser,
-  getUserById,
   changePasswordRequest,
 };
