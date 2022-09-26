@@ -94,7 +94,7 @@ const canjear = async (code, user, correo) => {
     }
 
     // correo
-    sendConfirmationEmail(correo, cartones, [
+    sendConfirmationEmail(user, cartones, [
       {serie: 1, cantidad: 1},
       {serie: 2, cantidad: 1},
       {serie: 4, cantidad: 1},
