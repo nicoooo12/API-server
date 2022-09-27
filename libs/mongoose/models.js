@@ -57,6 +57,7 @@ const mySchemaOrdenesTerminadas = new Schema({
   user: String,
   comment: String,
   code: String,
+  endBy: String,
   fecha: {
     type: Date,
     default: function() {

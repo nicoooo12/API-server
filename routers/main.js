@@ -8,6 +8,10 @@ const OrdenesService = require('../services/ordenes');
 const PlayService = require('../services/play');
 const eventoService = require('../services/evento');
 const entradasService = require('../services/entradas');
+const adminData = require('../services/adminData');
+
+const scopesValidationHandler =
+require('../utils/middleware/scopeValidationHandler');
 
 require('../utils/auth/strategies/jwt');
 
@@ -215,6 +219,17 @@ module.exports = function(app) {
         } catch (error) {
           throw new Error(error);
         }
+      },
+  );
+
+  router.get('/admin',
+      passport.authenticate('jwt', {session: false}),
+      scopesValidationHandler(['admin']),
+      async (req, res) => {
+        const data = await adminData.getAdminData();
+        res.status(200).json({
+          data,
+        });
       },
   );
 };

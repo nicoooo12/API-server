@@ -50,7 +50,21 @@ const sendCodeChangePassword = async (user, code) => {
   });
 };
 
+const massageOrden = async (user, message) => {
+  await axios({
+    method: 'post',
+    url: `${config.serviceCorreoUrl}/api/massageOrden`,
+    data: {
+      key: config.serviceCorreoKey,
+      email: user.email,
+      name: user.name,
+      message,
+    },
+  });
+};
+
 module.exports = {
   sendConfirmationEmail,
   sendCodeChangePassword,
+  massageOrden,
 };

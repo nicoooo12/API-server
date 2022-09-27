@@ -7,6 +7,24 @@ const refreshService = require('./refresh');
 const table = 'codes';
 const {sendConfirmationEmail} = require('./correo');
 
+const getCodeAll = async () => {
+  try {
+    const getCode = await store.get(table, {});
+    return {err: false, getCode};
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getNumberCodeCanjeados = async () => {
+  try {
+    const getCode = await store.count(table, {active: /(.)+/});
+    return {err: false, getCode};
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const getCodeByCode = async (code) => {
   try {
     const getCode = await store.get(table, {code});
@@ -126,10 +144,12 @@ const markAsActive = async (code, activeBy) => {
 };
 
 module.exports = {
+  getNumberCodeCanjeados,
   canjear,
   getCodeByUser,
   getCodeByCode,
   createCodes,
   deletedCodes,
   markAsActive,
+  getCodeAll,
 };

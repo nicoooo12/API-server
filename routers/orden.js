@@ -328,6 +328,7 @@ module.exports = function(app) {
               req.body.pagado,
               req.body.correo,
               req.body.comment,
+              req.user._id,
           );
 
           await refresh(req.params.id);

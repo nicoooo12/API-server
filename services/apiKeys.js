@@ -58,6 +58,8 @@ const getApiKey = ({token}) => {
       'markAsActive:code',
       'deleted:code',
       'canjear:code',
+      'readAll:code',
+      'admin',
     ];
   }
   return boom.badRequest('token not valid');

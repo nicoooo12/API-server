@@ -105,9 +105,9 @@ const delt = (tabla, id) => {
   });
 };
 
-const count = async (tabla) => {
+const count = async (tabla, o={}) => {
   return new Promise(async (resolve, reject) => {
-    const current = await model[tabla].countDocuments();
+    const current = await model[tabla].countDocuments(o).exec();
     resolve(current);
   });
 };

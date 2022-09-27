@@ -12,6 +12,40 @@ module.exports = function(app) {
   const router = new express.Router();
   app.use('/api/code', router);
 
+  router.get('/nCanjeados',
+      passport.authenticate('jwt', {session: false}),
+      scopesValidationHandler(['readAll:code']),
+      async (req, res, next) => {
+        try {
+          const code = await codesService
+              .getNumberCodeCanjeados();
+
+          res.json({
+            message: 'ok',
+            data: code.getCode,
+          }).status(200);
+        } catch (error) {
+          next(error);
+        }
+      });
+
+  router.get('/',
+      passport.authenticate('jwt', {session: false}),
+      scopesValidationHandler(['readAll:code']),
+      async (req, res, next) => {
+        try {
+          const code = await codesService
+              .getCodeAll();
+
+          res.json({
+            message: 'ok',
+            data: code.getCode,
+          }).status(200);
+        } catch (error) {
+          next(error);
+        }
+      });
+
   router.get('/code/:code',
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['read:code']),

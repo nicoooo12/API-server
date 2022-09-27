@@ -3,8 +3,9 @@ const cartonesService = require('./cartones');
 const eventoService = require('./evento');
 const refreshService = require('./refresh');
 const shortid = require('shortid');
+const userService = require('./users');
 
-const {sendConfirmationEmail} = require('./correo');
+const {sendConfirmationEmail, massageOrden} = require('./correo');
 
 const table = 'ordenes';
 
@@ -65,6 +66,9 @@ const addCanvasUrl = async (code, canvasUrl) => {
 const addComment = async (id, message) => {
   try {
     const editOrden = await store.put(table, {user: id}, {message});
+    const user = await userService.getUserById(id);
+
+    massageOrden(user, message);
 
     refreshService(id);
 
@@ -155,7 +159,7 @@ const cancelOrden = async (id) => {
   }
 };
 
-const terminarOrden = async (id, pagado, correo = false, comment) => {
+const terminarOrden = async (id, pagado, correo = false, comment, adminId) => {
   try {
     // crea los cartones
     const orden = await store.get(table, {user: id});
@@ -219,6 +223,7 @@ const terminarOrden = async (id, pagado, correo = false, comment) => {
       referido: orden[0].referido,
       pagado,
       comment,
+      endBy: adminId,
       user: id,
     });
     await store.delt(table, {user: id});
