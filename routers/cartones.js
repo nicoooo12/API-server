@@ -117,7 +117,7 @@ module.exports = function(app) {
         }
       });
 
-  router.get('/:code', // get My cartones (user.id, data)
+  router.get('/code/:code', // get My cartones (user.id, data)
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['read:cartonById']),
       validationHandler(idSchema, 'params'),
