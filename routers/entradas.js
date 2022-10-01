@@ -63,6 +63,23 @@ module.exports = function(app) {
         }
       });
 
+  router.post('/usar/:id',
+      passport.authenticate('jwt', {session: false}),
+      // scopesValidationHandler(['create:code']),
+      async (req, res, next) => {
+        try {
+          const createCode = await codesService
+              .ocuparEntrada(req.params.id);
+
+          res.json({
+            message: 'ok',
+            data: createCode,
+          }).status(200);
+        } catch (error) {
+          next(error);
+        }
+      });
+
   router.delete('/:id',
       passport.authenticate('jwt', {session: false}),
       // scopesValidationHandler(['deleted:code']),

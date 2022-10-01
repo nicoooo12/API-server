@@ -117,6 +117,25 @@ module.exports = function(app) {
         }
       });
 
+  router.get('/:code', // get My cartones (user.id, data)
+      passport.authenticate('jwt', {session: false}),
+      scopesValidationHandler(['read:cartonById']),
+      validationHandler(idSchema, 'params'),
+      async (req, res, next)=>{
+        try {
+          const getCartones = await cartonesService.getCarton({
+            code: req.params.code,
+          });
+
+          res.json({
+            message: 'ok',
+            data: getCartones,
+          }).status(200);
+        } catch (err) {
+          next(err);
+        }
+      });
+
   router.get('/', // get My cartones (user.id, data)
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['read:cartones']),

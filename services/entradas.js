@@ -48,6 +48,28 @@ const createEntrada = async (user) => {
   }
 };
 
+const ocuparEntrada = async (id) => {
+  try {
+    const entrada = await store.get(table, {_id: id});
+    if (entrada[0]) {
+      return {err: true};
+    }
+
+    const change = await store.put(talble, {_id, id}, {use: true});
+
+    try {
+      await axios({
+        method: 'post',
+        url: `${config.ssrUrl}/sockets/entrada`,
+      });
+    } catch (error) {
+    }
+    return change;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const deletedEntrada = async (user) => {
   try {
     const getEntrada = await store.get(table, {user});
@@ -68,4 +90,5 @@ module.exports = {
   getCountEntradas,
   createEntrada,
   deletedEntrada,
+  ocuparEntrada,
 };
