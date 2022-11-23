@@ -60,7 +60,7 @@ const changePassword = async (email, code, password) => {
 };
 
 const createUser = async ({user}) => {
-  const {name, email, password} = user;
+  const {name, email, password, Pais:pais} = user;
   const queriedUser = await getUser({email});
 
 
@@ -77,6 +77,7 @@ const createUser = async ({user}) => {
     name,
     email,
     password: hashedPassword,
+    pais,
   });
 
   return {

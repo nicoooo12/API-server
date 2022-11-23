@@ -27,6 +27,7 @@ const createUserSchema =Joi.object({
       .email()
       .required(),
   password: Joi.string().required(),
+  Pais: Joi.string(),
   isAdmin: Joi.boolean(),
 });
 

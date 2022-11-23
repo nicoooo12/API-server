@@ -7,6 +7,7 @@ const mySchemaUsers = new Schema({
   // telefono: Number,
   password: String,
   isAdmin: Boolean,
+  pais: String,
   changePassword: String,
 });
 
