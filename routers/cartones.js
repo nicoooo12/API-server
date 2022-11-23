@@ -120,7 +120,6 @@ module.exports = function(app) {
   router.get('/code/:code', // get My cartones (user.id, data)
       passport.authenticate('jwt', {session: false}),
       scopesValidationHandler(['read:cartonById']),
-      validationHandler(idSchema, 'params'),
       async (req, res, next)=>{
         try {
           const getCartones = await cartonesService.getCarton({
