@@ -53,12 +53,13 @@ const authApi = (app) => {
             return next(boom.unauthorized());
           }
 
-          const {_id: id, name, email, isAdmin} = user;
+          const {_id: id, name, email, isAdmin, pais} = user;
 
           const payload = {
             sub: id,
             name,
             email,
+            pais: pais || 'chile',
             isAdmin: isAdmin,
             scopes: apiKey,
           };
@@ -73,6 +74,7 @@ const authApi = (app) => {
               id,
               name,
               email,
+              pais,
               isAdmin: isAdmin,
             },
           });
@@ -176,6 +178,7 @@ const authApi = (app) => {
             data: {
               email: getUser.email,
               name: getUser.name,
+              pais: getUser.pais,
               id: getUser._id,
             },
           }).status(200);

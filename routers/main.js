@@ -27,11 +27,12 @@ module.exports = function(app) {
           if (req.headers.authorization) {
             await passport.authenticate('jwt',
                 {session: false})(req, res, async (e) =>{
-              // console.log(req.user);
+              console.log(req.user);
               const user = {
                 name: req.user.name,
                 email: req.user.email,
                 id: req.user._id,
+                pais: req.user.pais,
                 admin: !!req.user.idAdmin,
               };
 
@@ -146,6 +147,7 @@ module.exports = function(app) {
               const user = {
                 name: req.user.name,
                 email: req.user.email,
+                pais: req.user.pais,
                 id: req.user._id,
                 admin: !!req.user.idAdmin,
               };
