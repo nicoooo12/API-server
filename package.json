@@ -9,7 +9,8 @@
   "scripts": {
     "start": "DEBUG=app:* node index",
     "dev": "DEBUG=app:* nodemon index",
-    "debug": "DEBUG=express:*,app:* nodemon index"
+    "debug": "DEBUG=express:*,app:* nodemon index",
+    "test": "mocha --exit"
   },
   "keywords": [],
   "author": "Nicolás Flores <nicoflores.dev@gmail.com>",

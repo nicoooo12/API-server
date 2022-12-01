@@ -4,7 +4,7 @@ const eventoService = require('./evento');
 // crud
 
 const table = 'cartones';
-const createCarton = (propietario, serie, i = 0) => {
+const createCarton = (propietario, serie, i = 0, ordenCode = 0) => {
   return new Promise(async (resolve, reject) => {
     try {
       let bucle = true;
@@ -23,6 +23,7 @@ const createCarton = (propietario, serie, i = 0) => {
             data: dataGenerada,
             serie,
             code: ('000000' + (n)).slice(-6),
+            ordenCode,
           });
           resultado = newCarton;
         }

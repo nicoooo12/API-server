@@ -22,6 +22,14 @@ const sendConfirmationEmail = async (id, cartones, orden) => {
     catalogoService.getCatalogo(), eventoService.get(),
   ]);
 
+  const fecha = evento.internacional ?
+    evento.naciones[
+        evento.naciones.indexOf(
+            evento.naciones.filter((e)=>e.name==user.pais)[0],
+        )
+    ].fecha:
+    evento.fecha;
+
   await axios({
     method: 'post',
     url: `${config.serviceCorreoUrl}/api/sendConfirmationEmail`,
@@ -32,7 +40,7 @@ const sendConfirmationEmail = async (id, cartones, orden) => {
       cartones: cartonesSend,
       catalogos,
       orden,
-      fecha: evento.fecha,
+      fecha,
     },
   });
 };

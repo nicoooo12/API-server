@@ -163,6 +163,7 @@ const terminarOrden = async (id, pagado, correo = false, comment, adminId) => {
   try {
     // crea los cartones
     const orden = await store.get(table, {user: id});
+    const [serie0] = await store.get('catalogos', {serie: 0});
 
     if (!orden[0]) {
       throw new Error('orden terminada');
@@ -170,21 +171,26 @@ const terminarOrden = async (id, pagado, correo = false, comment, adminId) => {
 
     const cartones = [];
     let cantidadCartonesNuevos = 0;
-
+    // console.log(orden[0]);
     orden[0].compra = orden[0].compra.map((e)=>{
       if (e.serie === 0) {
-        return [
-          {serie: 1, cantidad: 1*e.cantidad},
-          {serie: 2, cantidad: 1*e.cantidad},
-          {serie: 4, cantidad: 1*e.cantidad}];
+        return serie0.promo.map((g)=>{
+          // console.log(g);
+          return {serie: g.serie, cantidad: g.cantidad * e.cantidad};
+        });
       }
       return e;
     }).flat();
 
+    // console.log('[orden]: ', orden[0].compra);
+
     await orden[0].compra.map(async (e)=>{
+      // console.log(e);
       Array(e.cantidad).fill('', 0, e.cantidad).map(async (o, index)=>{
         const currentCarton = await cartonesService
-            .createCarton(id, e.serie, cantidadCartonesNuevos + index);
+            .createCarton(
+                id, e.serie, cantidadCartonesNuevos + index, orden[0].code,
+            );
         cartones.push(currentCarton);
       });
       cantidadCartonesNuevos = cantidadCartonesNuevos + e.cantidad;
@@ -221,6 +227,7 @@ const terminarOrden = async (id, pagado, correo = false, comment, adminId) => {
       compra: orden[0].compra,
       pago: orden[0].totalPago,
       referido: orden[0].referido,
+      code: orden[0].code,
       pagado,
       comment,
       endBy: adminId,
