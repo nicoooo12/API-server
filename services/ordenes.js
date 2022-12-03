@@ -162,6 +162,7 @@ const cancelOrden = async (id) => {
 const terminarOrden = async (id, pagado, correo = false, comment, adminId) => {
   try {
     // crea los cartones
+    const [user] = await store.get('users', {_id: id});
     const orden = await store.get(table, {user: id});
     const [serie0] = await store.get('catalogos', {serie: 0});
 
@@ -229,6 +230,7 @@ const terminarOrden = async (id, pagado, correo = false, comment, adminId) => {
       referido: orden[0].referido,
       code: orden[0].code,
       pagado,
+      moneda: user.pais,
       comment,
       endBy: adminId,
       user: id,

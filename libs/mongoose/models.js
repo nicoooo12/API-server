@@ -17,6 +17,7 @@ const mySchemaCartones = new Schema({
   data: Array,
   serie: Number,
   code: String,
+  ordenCode: String,
 });
 
 const mySchemaCatalogos = new Schema({
@@ -59,6 +60,7 @@ const mySchemaOrdenesTerminadas = new Schema({
   comment: String,
   code: String,
   endBy: String,
+  moneda: String,
   fecha: {
     type: Date,
     default: function() {
